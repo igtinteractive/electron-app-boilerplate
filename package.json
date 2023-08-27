@@ -1,0 +1,36 @@
+{
+  "name": "electron-app-boilerplate",
+  "version": "1.0.0",
+  "description": "Electron App Boilerplate",
+  "main": "./dist/main.js",
+  "author": "Frederic Lajeunesse",
+  "license": "MIT",
+  "scripts": {
+    "build": "webpack --config ./webpackConfig/webpack.config.js",
+    "react:dev": "webpack serve --config ./webpackConfig/webpack.config.js",
+    "electron:dev": "nodemon",
+    "dev": "cross-env NODE_ENV=development concurrently --kill-others \"yarn run react:dev\" \"yarn run electron:dev\" ",
+    "start": "cross-env NODE_ENV=production yarn build && electron dist/main.js",
+    "release": "cross-env NODE_ENV=production yarn electron-packager . ElectronApp --out=./release --overwrite --prune --ignore=app  --ignore=src --ignore=webpackConfig --ignore=nodemon.json --ignore=README.md --ignore=tsconfig --ignore=.*.map --ignore=.*.ts --ignore=.*.log --ignore=.*.lock"
+  },
+  "devDependencies": {
+    "@types/react": "^18.2.21",
+    "@types/react-dom": "^18.2.7",
+    "concurrently": "^8.2.1",
+    "cross-env": "^7.0.3",
+    "electron": "^26.0.0",
+    "electron-is-dev": "^2.0.0",
+    "electron-packager": "^17.1.2",
+    "electron-reloader": "^1.2.3",
+    "html-webpack-plugin": "^5.5.3",
+    "nodemon": "^3.0.1",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "ts-loader": "^9.4.4",
+    "typescript": "^5.1.6",
+    "webpack": "^5.88.2",
+    "webpack-cli": "^5.1.4",
+    "webpack-dev-server": "^4.15.1"
+  },
+  "dependencies": {}
+}
