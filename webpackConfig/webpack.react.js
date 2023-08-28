@@ -8,20 +8,27 @@ module.exports = {
   devtool: 'source-map',
   
   entry: {
-		loadPage : "./src/loadpage/loadPage.tsx",
-    test : "./src/testpage/test.tsx"
+		pageA : "./src/pageA/pageA.tsx",
+    pageB : "./src/pageB/pageB.tsx",
+    pageC : "./src/pageC/pageC.tsx",
   },
 
   plugins: [
     new HtmlWebpackPlugin({
-      filename:"loadPage.html",
-      chunks: ['loadPage'],		
+      filename:"pageA.html",
+      chunks: ['pageA'],		
       template: path.resolve(__dirname, "./../src/electron/index.html")
     }),
 
     new HtmlWebpackPlugin({
-      filename:"test.html",
-      chunks: ['test'],		
+      filename:"pageB.html",
+      chunks: ['pageB'],		
+      template: path.resolve(__dirname, "./../src/electron/index.html")
+    }),
+
+    new HtmlWebpackPlugin({
+      filename:"pageC.html",
+      chunks: ['pageC'],		
       template: path.resolve(__dirname, "./../src/electron/index.html")
     })
     
