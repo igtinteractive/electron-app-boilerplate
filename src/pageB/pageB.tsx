@@ -37,6 +37,14 @@ export default class PageB extends Component {
 		
 	}
 
+	/**
+	 * called before the windopws close
+	 * you shoudl clear any listeners
+	 */
+	componentWillUnmount(): void {
+		AppComRemote.getInstance().removeMenuClickListener(this.onMenuClick);
+	}
+
 	private onMenuClick = (id:string) => {
 		console.log(`${id} CLICKED`);
 		switch (id) {

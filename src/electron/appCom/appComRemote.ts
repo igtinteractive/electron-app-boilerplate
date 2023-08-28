@@ -29,14 +29,24 @@ export default class AppComRemote {
     }
 
     /**
-    * Open a modal window if not already open.
-    * @param windowName The name of the window.
-    * The window and window name must be setup in the ./webpackConfig/webpack.react.js entry and plugins
-    */
+     * Open a modal window if not already open.
+     * @param windowName name of the window ( difine in the ./webpackConfig/webpack.react.js )
+     * @param title (optional) the title to display on the widows bar.
+     * @param maximize (optional) wheter to miximaize the window when it opens ( if size is not define ).
+     * @param size (optional) the with and height of the windows when it opens. ( maximize is ignore if size is specifed )
+     * 
+     * The window and window name must be setup in the ./webpackConfig/webpack.react.js entry and plugins
+     */
     public openWindow = (windowName:string, title?:string, maximize?:boolean, size?:{width:number, height:number} ) => {        
         ipcRenderer.sendSync(AppComEventTypes.openWindow, {windowName:windowName, title:title, maximize:maximize, size:size});
     }
 
+    /**
+     * Load a page in the current "focus" window. 
+	 * If thew page is already open in a other window, that window will be focus.
+     * @param windowName name of the window ( difine in the ./webpackConfig/webpack.react.js )
+     * @param title (optional) the title to display on the widows bar.
+     */
     public loadPage = (windowName:string, title?:string) => {
         ipcRenderer.sendSync(AppComEventTypes.loadPage, {windowName:windowName, title:title});
     }

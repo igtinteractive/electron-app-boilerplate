@@ -33,8 +33,15 @@ export default class PageA extends Component {
 		AppComRemote.getInstance().addMenuClickListener(this.onMenuClick);
 
 		// Set aplication menu
-		AppComRemote.getInstance().setApplicationMenu(this.pageAMenu);
-		
+		AppComRemote.getInstance().setApplicationMenu(this.pageAMenu);		
+	}
+
+	/**
+	 * called before the windopws close
+	 * you shoudl clear any listeners
+	 */
+	componentWillUnmount(): void {
+		AppComRemote.getInstance().removeMenuClickListener(this.onMenuClick);
 	}
 
 	private onMenuClick = (id:string) => {
