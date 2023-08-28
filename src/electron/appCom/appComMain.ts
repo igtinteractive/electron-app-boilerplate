@@ -59,11 +59,16 @@ export default class AppComMain {
 		});
   	}
 
-    /**
-     * Open a modal window if not already open.
-     * @param windowName The name of the window.
-     * The window and window name must be setup in the ./webpackConfig/webpack.react.js entry and plugins
-     */
+	/**
+	 * Open a modal window if not already open.
+	 * @param options 
+	 * 		windowName : name of the window ( difine in the ./webpackConfig/webpack.react.js )
+	 * 		title : (optional) the title to display on the widows bar.
+	 * 		maximize : (optional) wheter to miximaize the window when it opens ( if size is not define ).
+	 * 		size : (optional) the with and height of the windows when it opens. ( maximize is ignore if size is specifed )
+	 * 	
+	 * The window and window name must be setup in the ./webpackConfig/webpack.react.js entry and plugins
+	 */   
     public openWindow = (options:{windowName: string, title?:string, maximize?:boolean, size?:{width:number, height:number}}) => {
        
         if (!this._windows.has(options.windowName)) {
@@ -111,6 +116,11 @@ export default class AppComMain {
 		}
     }
 
+	/**
+	 * Load a page in the current "focus" window. 
+	 * If thew page is already open in a other window, that window will be focus.
+	 * @param options 
+	 */
 	public loadPage = (options:{windowName: string, title?:string}) => {
 
 		//--- if the window name exist set that window focus.
