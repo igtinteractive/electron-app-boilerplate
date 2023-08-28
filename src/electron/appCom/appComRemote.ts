@@ -2,6 +2,7 @@ import { ipcRenderer } from "electron";
 
 export enum AppComEventTypes {
     openWindow = "openWindow",
+    closeWindow = "closeWindow",
     loadPage = "loadPage",
     setApplicationMenu = "setApplicationMenu",
     setMenu = "setMenu",
@@ -39,6 +40,14 @@ export default class AppComRemote {
      */
     public openWindow = (windowName:string, title?:string, maximize?:boolean, size?:{width:number, height:number} ) => {        
         ipcRenderer.sendSync(AppComEventTypes.openWindow, {windowName:windowName, title:title, maximize:maximize, size:size});
+    }
+
+    /**
+     * Close a windows if it is open.
+     * @param windowName 
+     */
+    public closeWindow = (windowName:string) => {
+        ipcRenderer.sendSync(AppComEventTypes.closeWindow, windowName);
     }
 
     /**
