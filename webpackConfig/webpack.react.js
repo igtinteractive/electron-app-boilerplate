@@ -7,13 +7,16 @@ module.exports = {
   target: 'electron-renderer',
   devtool: 'source-map',
   
+  // entry point must be defined here.
+  // nameOfThePage : "path to the page ts file"
   entry: {
 		pageA : "./src/pageA/pageA.tsx",
     pageB : "./src/pageB/pageB.tsx",
     pageC : "./src/pageC/pageC.tsx",
   },
 
-  plugins: [
+  // each page must have a plugin to get compile as a html page correctly.
+  plugins: [   
     new HtmlWebpackPlugin({
       filename:"pageA.html",
       chunks: ['pageA'],		
