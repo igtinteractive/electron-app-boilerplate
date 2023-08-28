@@ -9,15 +9,15 @@ export enum AppComEventTypes {
     onMenuClick = "onMenuClick"
 }
 
-export default class AppComRemote {
+export default class AppComRenderer {
 
-    private static _instance: AppComRemote;
+    private static _instance: AppComRenderer;
 
     private _menuClickListener = Array<Function>();
 
     public static getInstance = () => {
-        if (!AppComRemote._instance) {
-            AppComRemote._instance = new AppComRemote();
+        if (!AppComRenderer._instance) {
+            AppComRenderer._instance = new AppComRenderer();
 
             ipcRenderer.on(AppComEventTypes.onMenuClick, (evt, args) => {
                 this._instance._menuClickListener.forEach( ( callback, index) => {                    
@@ -26,7 +26,7 @@ export default class AppComRemote {
             });
         }
 
-        return AppComRemote._instance;
+        return AppComRenderer._instance;
     }
 
     /**

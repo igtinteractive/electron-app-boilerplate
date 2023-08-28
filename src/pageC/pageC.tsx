@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { createRoot } from 'react-dom/client'
 
 import { MyComponent } from '../pageA/myComponent';
-import AppComRemote from '../electron/appCom/appComRemote';
+import AppComRenderer from '../electron/appCom/appComRenderer';
 
 export default class PageC extends Component {
 
@@ -30,10 +30,10 @@ export default class PageC extends Component {
 	componentDidMount() {		
 		
 		//add Menu Click Listener
-		AppComRemote.getInstance().addMenuClickListener(this.onMenuClick);
+		AppComRenderer.getInstance().addMenuClickListener(this.onMenuClick);
 
 		// Set menu
-		AppComRemote.getInstance().setMenu(this.pageCMenu);		
+		AppComRenderer.getInstance().setMenu(this.pageCMenu);		
 		
 	}
 
@@ -42,34 +42,34 @@ export default class PageC extends Component {
 	 * you shoudl clear any listeners
 	 */
 	componentWillUnmount(): void {
-		AppComRemote.getInstance().removeMenuClickListener(this.onMenuClick);
+		AppComRenderer.getInstance().removeMenuClickListener(this.onMenuClick);
 	}
 
 	private onMenuClick = (id:string) => {
 		console.log(`${id} CLICKED`);
 		switch (id) {
 			case "OpenPageA" :
-				AppComRemote.getInstance().openWindow("pageA", "Page A", true);
+				AppComRenderer.getInstance().openWindow("pageA", "Page A", true);
 			break;
 
 			case "OpenPageB" :
-				AppComRemote.getInstance().openWindow("pageB", "Page B Open", false, {width:300, height:300});
+				AppComRenderer.getInstance().openWindow("pageB", "Page B Open", false, {width:300, height:300});
 			break;
 
 			case "OpenPageC" :
-				AppComRemote.getInstance().openWindow("pageC");
+				AppComRenderer.getInstance().openWindow("pageC");
 			break;
 
 			case "LoadPageA" :
-				AppComRemote.getInstance().loadPage("pageA", "Page A");
+				AppComRenderer.getInstance().loadPage("pageA", "Page A");
 			break;
 
 			case "LoadPageB" :
-				AppComRemote.getInstance().loadPage("pageB", "Page B Loaded");
+				AppComRenderer.getInstance().loadPage("pageB", "Page B Loaded");
 			break;
 
 			case "LoadPageC" :
-				AppComRemote.getInstance().loadPage("pageC");
+				AppComRenderer.getInstance().loadPage("pageC");
 			break;
 			
 		}

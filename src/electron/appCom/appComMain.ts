@@ -1,5 +1,5 @@
 import { BrowserWindow, Menu, ipcMain } from "electron";
-import { AppComEventTypes } from "./appComRemote";
+import { AppComEventTypes } from "./appComRenderer";
 
 export default class AppComMain {
     private static _instance: AppComMain;
