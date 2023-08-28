@@ -17,7 +17,7 @@ export default class Main {
 	/** called when the Application in initialize and ready */
 	private static onReady = () => {
 		//--- Open the pageA when app start
-		AppComMain.getInstance().openWindow({windowName:"pageA", title:"Page A"});
+		AppComMain.getInstance().openWindow({windowName:"pageA", title:"Page A", maximize:true});
 	}
 
 	/**

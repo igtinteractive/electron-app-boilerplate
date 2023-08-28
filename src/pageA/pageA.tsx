@@ -41,11 +41,11 @@ export default class PageA extends Component {
 		console.log(`${id} CLICKED`);
 		switch (id) {
 			case "OpenPageA" :
-				AppComRemote.getInstance().openWindow("pageA", "Page A");
+				AppComRemote.getInstance().openWindow("pageA", "Page A", true);
 			break;
 
 			case "OpenPageB" :
-				AppComRemote.getInstance().openWindow("pageB", "Page B Open");
+				AppComRemote.getInstance().openWindow("pageB", "Page B Open", false, {width:300, height:300});
 			break;
 
 			case "OpenPageC" :

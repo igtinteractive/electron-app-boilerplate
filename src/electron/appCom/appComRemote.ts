@@ -33,8 +33,8 @@ export default class AppComRemote {
     * @param windowName The name of the window.
     * The window and window name must be setup in the ./webpackConfig/webpack.react.js entry and plugins
     */
-    public openWindow = (windowName:string, title?:string) => {        
-        ipcRenderer.sendSync(AppComEventTypes.openWindow, {windowName:windowName, title:title});
+    public openWindow = (windowName:string, title?:string, maximize?:boolean, size?:{width:number, height:number} ) => {        
+        ipcRenderer.sendSync(AppComEventTypes.openWindow, {windowName:windowName, title:title, maximize:maximize, size:size});
     }
 
     public loadPage = (windowName:string, title?:string) => {

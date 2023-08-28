@@ -64,24 +64,29 @@ export default class AppComMain {
      * @param windowName The name of the window.
      * The window and window name must be setup in the ./webpackConfig/webpack.react.js entry and plugins
      */
-    public openWindow = (options:{windowName: string, title?:string}) => {
+    public openWindow = (options:{windowName: string, title?:string, maximize?:boolean, size?:{width:number, height:number}}) => {
        
         if (!this._windows.has(options.windowName)) {
 			let win = new BrowserWindow({
-				width: 800,
-				height: 600,
+				width: options.size?.width ? options.size.width : 800,
+				height: options.size?.width ? options.size.width : 600,
 				webPreferences: {
 					nodeIntegration: true,
 					contextIsolation: false,
 					nodeIntegrationInWorker: true,
 					webSecurity: false
-				}				
+				}
 			});	
 			
 			//-- reset window title
 			if (options.title) {
 				win.setTitle(options.title);
 			}	
+
+			//-- Miximize window
+			if (!options.size && options.maximize) {
+				win.maximize();
+			}
 
 			win.addListener("closed", (evt:any) => {
 				let w = this._windows.get(options.windowName);
