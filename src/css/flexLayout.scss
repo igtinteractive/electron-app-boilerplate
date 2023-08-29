@@ -1,0 +1,43 @@
+html, body, .fl-vert-container{
+    background-color: rgb(39, 39, 39);
+    color: white;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.fl-vert-container {
+    min-height: 100%;
+	display:flex;
+    flex-direction: column;
+}
+
+.fl-horiz-container {
+	display:flex;
+    flex-flow: row;
+}
+
+.fl-expand-child {
+    flex:auto;
+    flex-grow: 1;
+}
+
+.flexLayoutContainer {
+    flex-grow: 1;
+    left: 0;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    position: relative;
+    border: 1px solid #ddd;
+}
+
+.panel {
+    height:100%;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    background-color:black;
+    border:1px solid #555;
+    box-sizing: border-box;
+}

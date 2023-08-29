@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import { createRoot } from 'react-dom/client'
 
-import { MyComponent } from '../pageA/myComponent';
 import AppComRenderer from '../electron/appCom/appComRenderer';
 
 export default class PageC extends Component {

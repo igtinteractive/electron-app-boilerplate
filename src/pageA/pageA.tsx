@@ -1,10 +1,12 @@
+import "../css/flexLayout.scss";
 import React, { Component } from 'react';
 import { createRoot } from 'react-dom/client'
 
-import { MyComponent } from './myComponent';
 import AppComRenderer from '../electron/appCom/appComRenderer';
+import ProjectStore from '../stores/projectStore';
+import { BookListView } from "./bookListView";
 
-export default class PageA extends Component {
+export default class PageA extends Component <any, any>{
 
 	private pageAMenu = [		
 		{ label: "Open Page", submenu: [
@@ -22,6 +24,7 @@ export default class PageA extends Component {
 
 	constructor(props: any) {
 		super(props);
+		this.state = { selectedBookId:null }
 	}
 
 	/**
@@ -33,7 +36,7 @@ export default class PageA extends Component {
 		AppComRenderer.getInstance().addMenuClickListener(this.onMenuClick);
 
 		// Set aplication menu
-		AppComRenderer.getInstance().setApplicationMenu(this.pageAMenu);		
+		AppComRenderer.getInstance().setApplicationMenu(this.pageAMenu);
 	}
 
 	/**
@@ -75,9 +78,25 @@ export default class PageA extends Component {
 	}
 
 	render() {
-		return <div>
-			<h1>This is Page A</h1>
-			<MyComponent></MyComponent>
+		let books = new Array<any>();		
+		(ProjectStore.getInstance().books as Map<string, any>).forEach( (book, bookId) => {			
+			books.push( <div key={bookId}  style={{margin:"10px"}}>- {book.title} </div> )
+		})		
+
+		return <div className="fl-vert-container" style={{margin:"10px"}}>
+			<h1>This is Page A</h1>	
+			<div className="fl-horiz-container">
+				<BookListView books={ProjectStore.getInstance().books} selectedBookId={this.state.selectedBookId} 
+					onSelectionChange={ (evt:any) => {
+						ProjectStore.getInstance().selectedBookId = evt;
+						this.setState({selectedBookId:evt});
+					}}>
+				</BookListView>
+
+				<fieldset style ={{ width: "100%", borderRadius: "8px", padding: "0px" }} >
+					<legend style={{marginLeft:"10px"}}>Book Info</legend>
+				</fieldset>
+			</div>			
 		</div>
 	}	
 }
