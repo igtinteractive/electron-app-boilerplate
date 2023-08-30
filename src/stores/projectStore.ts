@@ -1,4 +1,4 @@
-import { computed, observable } from "mobx";
+import { computed, makeAutoObservable, observable } from "mobx";
 import AuthorStore from "./authorStore";
 import PublisherStore from "./publisherStore";
 import BookStore from "./bookStore";
@@ -57,7 +57,7 @@ export default class ProjectStore {
                 "2" :  {
                     "authorId" : 1,
                     "firstName" : "Max",
-                    "lastName" : "Value",
+                    "lastName" : "The Writer",
                     "email" : "max@email.com"
                 }
             },
@@ -84,6 +84,7 @@ export default class ProjectStore {
 		if (!ProjectStore._instance) {
 			ProjectStore._instance = new ProjectStore();
 			ProjectStore._instance.initStore(ProjectStore._instance._projectData);
+            makeAutoObservable(ProjectStore._instance);
 
 			// ipcRenderer.on("main.ProjectPropsUpdate", (evt, args) => {
 			// 	ProjectStore._instance?.initStore(args);

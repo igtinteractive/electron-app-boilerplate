@@ -18,14 +18,14 @@ export class BookListView extends Component < IBookListViewProps > {
 		super(props);
 	}
 
-    render() {        
+    render() {
         let books = new Array<any>();        
         this.props.books?.forEach( (book, bookId) => {
             let bgColor:string | undefined = this.props.selectedBookId == bookId ? "gray" : undefined;
             books.push( 
                 <div key={bookId} style={{margin:"10px", backgroundColor:bgColor}} onClick={(evt) => {                
                     if (this.props.onSelectionChange) {
-                        this.props.onSelectionChange(bookId);                        
+                        this.props.onSelectionChange(bookId);
                     }                
                 }}>
                     - {book.title}

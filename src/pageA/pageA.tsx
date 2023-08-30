@@ -5,8 +5,11 @@ import { createRoot } from 'react-dom/client'
 import AppComRenderer from '../electron/appCom/appComRenderer';
 import ProjectStore from '../stores/projectStore';
 import { BookListView } from "./bookListView";
+import { BookView } from "./bookView";
 
 export default class PageA extends Component <any, any>{
+
+	private _projectStore:ProjectStore;
 
 	private pageAMenu = [		
 		{ label: "Open Page", submenu: [
@@ -24,6 +27,7 @@ export default class PageA extends Component <any, any>{
 
 	constructor(props: any) {
 		super(props);
+		this._projectStore = ProjectStore.getInstance();
 		this.state = { selectedBookId:null }
 	}
 
@@ -79,23 +83,26 @@ export default class PageA extends Component <any, any>{
 
 	render() {
 		let books = new Array<any>();		
-		(ProjectStore.getInstance().books as Map<string, any>).forEach( (book, bookId) => {			
+		(this._projectStore.books as Map<string, any>).forEach( (book, bookId) => {			
 			books.push( <div key={bookId}  style={{margin:"10px"}}>- {book.title} </div> )
 		})		
+
+		//let selectedBookId = this.state.selectedBookId;
+		let selectedBook = this._projectStore.books.get(this.state.selectedBookId)
+
+		console.log(this._projectStore.selectedBookId);
 
 		return <div className="fl-vert-container" style={{margin:"10px"}}>
 			<h1>This is Page A</h1>	
 			<div className="fl-horiz-container">
-				<BookListView books={ProjectStore.getInstance().books} selectedBookId={this.state.selectedBookId} 
+				<BookListView books={this._projectStore.books} selectedBookId={selectedBook?.bookId} 
 					onSelectionChange={ (evt:any) => {
-						ProjectStore.getInstance().selectedBookId = evt;
+						this._projectStore.selectedBookId = evt;
 						this.setState({selectedBookId:evt});
 					}}>
 				</BookListView>
 
-				<fieldset style ={{ width: "100%", borderRadius: "8px", padding: "0px" }} >
-					<legend style={{marginLeft:"10px"}}>Book Info</legend>
-				</fieldset>
+				<BookView book={selectedBook}></BookView>
 			</div>			
 		</div>
 	}	

@@ -1,5 +1,5 @@
 
-import { computed, observable } from "mobx";
+import { computed, makeAutoObservable, observable } from "mobx";
 
 export interface IAuthorStore {
     authorId : string,
@@ -16,6 +16,8 @@ export default class AuthorStore {
     @observable private _email: string;  
 
     constructor(props:IAuthorStore) {        
+
+        makeAutoObservable(this);
 
         this._authorId = props.authorId;
         this._firstName = props.firstName;

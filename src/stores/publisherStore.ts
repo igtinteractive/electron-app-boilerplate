@@ -1,5 +1,5 @@
 
-import { computed, observable } from "mobx";
+import { computed, makeAutoObservable, observable } from "mobx";
 
 export interface IPublisherStoreStore {
     publisherId : string,
@@ -16,6 +16,9 @@ export default class PublisherStore {
     @observable private _email: string;
 
     constructor(props:IPublisherStoreStore) {
+
+        makeAutoObservable(this);
+
         this._publisherId = props.publisherId;
         this._name = props.name;
         this._contacName = props.contacName;
