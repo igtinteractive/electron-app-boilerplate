@@ -46,7 +46,7 @@ export default class PageA extends Component <any, any>{
 		AppComRenderer.getInstance().addMenuClickListener(this.onMenuClick);
 
 		// Set aplication menu
-		AppComRenderer.getInstance().setApplicationMenu(this.pageAMenu);
+		AppComRenderer.getInstance().setMenu(this.pageAMenu);
 	}
 
 	/**
@@ -103,6 +103,7 @@ export default class PageA extends Component <any, any>{
 		let files = AppComRenderer.getInstance().showOpenDialogSync({ properties: ["openFile"], filters: [{name: "project", extensions: ["json"]}]});
 		if (files && files[0]) {
 			this._projectStore.loadData(files[0]);
+			this._projectStore.syncData();
 		}				
 	}
 

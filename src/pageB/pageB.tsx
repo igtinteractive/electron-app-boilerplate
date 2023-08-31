@@ -7,6 +7,8 @@ import ProjectStore from '../stores/projectStore';
 import { BookListView } from "../pageA/bookListView";
 import { BookView } from "../pageA/bookView";
 import { observer } from "mobx-react";
+import { AuthorView } from "./authorView";
+import AuthorStore from "src/stores/authorStore";
 
 @observer
 export default class PageB extends Component <any, any> {
@@ -41,7 +43,7 @@ export default class PageB extends Component <any, any> {
 		AppComRenderer.getInstance().addMenuClickListener(this.onMenuClick);
 
 		// Set aplication menu
-		AppComRenderer.getInstance().setApplicationMenu(this.pageAMenu);
+		AppComRenderer.getInstance().setMenu(this.pageAMenu);
 	}
 
 	/**
@@ -94,6 +96,11 @@ export default class PageB extends Component <any, any> {
 		let selectedBookId = this._projectStore.selectedBookId ? this._projectStore.selectedBookId : "";
 		let selectedBook = this._projectStore.books.get(selectedBookId);
 
+		let authorStore:AuthorStore | undefined = undefined;
+		if (selectedBook) {
+			authorStore = this._projectStore.authors.get(selectedBook.authorId);
+		}		
+
 		return <div className="fl-vert-container" style={{margin:"10px"}}>
 			<h1>This is Page B</h1>	
 			<div className="fl-horiz-container">
@@ -103,7 +110,10 @@ export default class PageB extends Component <any, any> {
 					}}>
 				</BookListView>
 
-				<BookView book={selectedBook}></BookView>
+				<div>
+					<BookView book={selectedBook}></BookView>
+					<AuthorView author={authorStore}></AuthorView>
+				</div>
 			</div>
 			<div className="fl-horiz-container">				
 				<button style={{margin:"10px"}} onClick={() => { this._projectStore.syncData();	}}> Synch Data </button>

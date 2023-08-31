@@ -15,7 +15,11 @@ export default class Main {
 		Main.application.on("window-all-closed", Main.onWindowAllClosed);
 		Main.application.on("ready", Main.onReady);
 
-		//** set the project data */
+		//*** Create demo data *******************************/
+		let b1 = v4(), b2 = v4(), b3 = v4();
+		let aut1 = v4(), aut2 = v4();
+		let pub1 = v4(), pub2 =v4(), pub3 = v4(); 
+
 		let projectData = {
 			appData : {
 				selectedBookId: null
@@ -23,38 +27,38 @@ export default class Main {
 	
 			projectData : {
 				books : {
-					"5e1d7b29-0dc0-4275-985a-87a11a5f4fef" :  {
-						bookId : "5e1d7b29-0dc0-4275-985a-87a11a5f4fef",
+					[b1] :  {
+						bookId :b1,
 						title : "Book A",
-						authorId : 1,
-						publisherId : 1
+						authorId : aut1,
+						publisherId : pub1
 					},
 			
-					"e3138188-f952-4060-8488-ceec3638a816" :  {
-						bookId : "e3138188-f952-4060-8488-ceec3638a816",
+					[b2] :  {
+						bookId : b2,
 						title : "Book B",
-						authorId : 1,
-						publisherId : 1
+						authorId : aut1,
+						publisherId : pub2
 					},
 			
-					"48aecd37-58a6-4edf-b2eb-606e76af10f5" :  {
-						bookId : "48aecd37-58a6-4edf-b2eb-606e76af10f5",
+					[b3] :  {
+						bookId : b3,
 						title : "The Book C",
-						authorId : 2,
-						publisherId : 1
+						authorId : aut2,
+						publisherId : pub1
 					}
 				},
 			
 				authors : {
-					"5e1d7b29-0dc0-4275-985a-87a11a5f4fef" :  {
-						authorId : "5e1d7b29-0dc0-4275-985a-87a11a5f4fef",
+					[aut1] :  {
+						authorId : aut1,
 						firstName : "Frederic",
 						lastName : "Lajeunesse",
 						email : "frederic@email.com"
 					},
 			
-					"e3138188-f952-4060-8488-ceec3638a816" :  {
-						authorId : "e3138188-f952-4060-8488-ceec3638a816",
+					[aut2] :  {
+						authorId : aut2,
 						firstName : "Max",
 						lastName : "The Writer",
 						email : "max@email.com"
@@ -62,14 +66,14 @@ export default class Main {
 				},
 				
 				publishers : {
-					"5e1d7b29-0dc0-4275-985a-87a11a5f4fef" :  {
-						publisherId : "5e1d7b29-0dc0-4275-985a-87a11a5f4fef",
+					[pub1] :  {
+						publisherId : pub1,
 						name : "The Publisher",
 						contacName : "The Publisher Guy",
 						email : "guy@email.com"
 					},
-					"e3138188-f952-4060-8488-ceec3638a816" :  {
-						publisherId : "e3138188-f952-4060-8488-ceec3638a816",
+					[pub2] :  {
+						publisherId :pub2,
 						name : "Some Other Publisher",
 						contacName : "Some Other Guy",
 						email : "otherguy@email.com"
@@ -77,8 +81,11 @@ export default class Main {
 				} 
 			}			
 		}		
+
+		//** set the project data */
 		AppComMain.getInstance().syncData("projectData", JSON.stringify(projectData));
 
+		
 	}
 
 	/** called when the Application in initialize and ready */
