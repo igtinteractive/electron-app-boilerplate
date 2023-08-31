@@ -61,8 +61,7 @@ export default class PageA extends Component <any, any>{
 	 * Handle the menuclick events.
 	 * @param id 
 	 */
-	private onMenuClick = (id:string) => {
-		console.log(`${id} CLICKED`);
+	private onMenuClick = (id:string) => {		
 		switch (id) {
 			case "LoadData" :				
 				this.loadData();		
@@ -99,6 +98,9 @@ export default class PageA extends Component <any, any>{
 		}
 	}
 
+	/**
+	 * Show Open Dialog Sync and Load data from selected json file.
+	 */
 	private loadData = () => {
 		let files = AppComRenderer.getInstance().showOpenDialogSync({ properties: ["openFile"], filters: [{name: "project", extensions: ["json"]}]});
 		if (files && files[0]) {
@@ -107,6 +109,9 @@ export default class PageA extends Component <any, any>{
 		}				
 	}
 
+	/**
+	 * Show Save Dialog Sync and save data to selected json file.
+	 */
 	private saveData = () => {
 		let filePath = AppComRenderer.getInstance().showSaveDialogSync();		
 		if (filePath) {

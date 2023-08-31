@@ -53,6 +53,11 @@ export default class ProjectStore {
 	}
     
 
+    /**
+     * Load the json data from given file
+     * and re-initialize the Project Store with the new data.
+     * @param filePath 
+     */
     public loadData = (filePath:string) => {
         const json: any = fs.existsSync(filePath) ? fs.readFileSync(filePath) : null;
         if (json) {
@@ -60,6 +65,10 @@ export default class ProjectStore {
         }        
     }
 
+    /**
+     * Save the json data to the fiven file path.
+     * @param filePath 
+     */
     public saveData = (filePath:string) => {
         fs.writeFile(filePath, JSON.stringify(this.getJson()));
     }
@@ -122,10 +131,19 @@ export default class ProjectStore {
         this._books = value;
     }
 
+    /**
+     * Syncronize the data between all windows.
+     * dispatch AppComEventTypes.syncData to the AppComMain
+     * wich then re-dispatch the AppComEventTypes.syncData to all windows.
+     */
     public syncData = () => {
         AppComRenderer.getInstance().syncData("projectData", JSON.stringify(this.getJson()));
     }
 
+    /**
+     * return the json representation of the PRoject Store.
+     * @returns 
+     */
     public getJson = () => {
         let books: any = {};
         this._books.forEach( (bookStore, bookId) => {
@@ -142,7 +160,6 @@ export default class ProjectStore {
             publishers[publisherId] = publisherStore.getJson();
         })
 
-
         let data = {
             appData : {
                 selectedBookId : this._selectedBookId ? this._selectedBookId : undefined
@@ -152,11 +169,7 @@ export default class ProjectStore {
                 authors : authors, // Map of authors 
                 publishers : publishers, // map of publisher
             }
-        }
-
-        console.log(" =============== ");
-        console.log(data);
-        console.log("----------------");        
+        }       
 
         return data;
     }

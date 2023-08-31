@@ -45,8 +45,7 @@ export default class PageC extends Component {
 		AppComRenderer.getInstance().removeMenuClickListener(this.onMenuClick);
 	}
 
-	private onMenuClick = (id:string) => {
-		console.log(`${id} CLICKED`);
+	private onMenuClick = (id:string) => {		
 		switch (id) {
 			case "OpenPageA" :
 				AppComRenderer.getInstance().openWindow("pageA", "Page A", true);

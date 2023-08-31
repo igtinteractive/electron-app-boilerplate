@@ -54,8 +54,7 @@ export default class PageB extends Component <any, any> {
 		AppComRenderer.getInstance().removeMenuClickListener(this.onMenuClick);
 	}
 
-	private onMenuClick = (id:string) => {
-		console.log(`${id} CLICKED`);
+	private onMenuClick = (id:string) => {		
 		switch (id) {
 			case "OpenPageA" :
 				AppComRenderer.getInstance().openWindow("pageA", "Page A", true);
@@ -85,7 +84,7 @@ export default class PageB extends Component <any, any> {
 	}
 
 	render() {
-		console.log("[PageB render]");
+		//console.log("[PageB render]");
 
 		/** create an array that containe the display <div> for each book. */
 		let books = new Array<any>();		
