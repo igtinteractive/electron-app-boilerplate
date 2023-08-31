@@ -19,6 +19,8 @@ export class BookListView extends Component < IBookListViewProps > {
 	}
 
     render() {
+        //console.log("[BookListView render]");
+
         let books = new Array<any>();        
         this.props.books?.forEach( (book, bookId) => {
             let bgColor:string | undefined = this.props.selectedBookId == bookId ? "gray" : undefined;

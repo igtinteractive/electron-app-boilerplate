@@ -53,5 +53,13 @@ export default class BookStore {
         this._publisherId = value;
     }     
 
-    
+    public getJson = () => {
+        let data = {
+            bookId: this._bookId,
+            title: this._title,
+            authorId: this._authorId,
+            publisherId: this._publisherId
+        }
+        return data
+    }    
 }

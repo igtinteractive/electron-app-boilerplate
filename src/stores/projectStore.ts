@@ -2,6 +2,8 @@ import { computed, makeAutoObservable, observable } from "mobx";
 import AuthorStore from "./authorStore";
 import PublisherStore from "./publisherStore";
 import BookStore from "./bookStore";
+import { ipcRenderer } from "electron";
+import AppComRenderer, { AppComEventTypes } from "../electron/appCom/appComRenderer";
 
 export interface IProjectProps {
     appData : {
@@ -17,62 +19,6 @@ export interface IProjectProps {
 export default class ProjectStore {
     
     private static _instance: ProjectStore | undefined = undefined;
-    
-    private _projectData = {
-        "appData" : {
-        },
-
-        "projectData" : {
-            "books" : {
-                "1" :  {
-                    "bookId" : 1,
-                    "title" : "Book A",
-                    "authorId" : 1,
-                    "publisherId" : 1
-                },
-        
-                "2" :  {
-                    "bookId" : 2,
-                    "title" : "Book B",
-                    "authorId" : 1,
-                    "publisherId" : 1
-                },
-        
-                "3" :  {
-                    "bookId" : 3,
-                    "title" : "The Book C",
-                    "authorId" : 2,
-                    "publisherId" : 1
-                }
-            },
-        
-            "authors" : {
-                "1" :  {
-                    "authorId" : 1,
-                    "firstName" : "Frederic",
-                    "lastName" : "Lajeunesse",
-                    "email" : "frederic@email.com"
-                },
-        
-                "2" :  {
-                    "authorId" : 1,
-                    "firstName" : "Max",
-                    "lastName" : "The Writer",
-                    "email" : "max@email.com"
-                }
-            },
-            
-            "publishers" : {
-                "1" :  {
-                    "publisherId" : 1,
-                    "name" : "The Publisher",
-                    "contacName" : "The Publisher Guy",
-                    "email" : "guy@email.com"
-                }
-            } 
-        }
-        
-    }
 
     @observable private _selectedBookId: string | null = null;    
 
@@ -82,33 +28,50 @@ export default class ProjectStore {
 
     public static getInstance = () => {
 		if (!ProjectStore._instance) {
+            //*** create the static _instance for the singleton */
 			ProjectStore._instance = new ProjectStore();
-			ProjectStore._instance.initStore(ProjectStore._instance._projectData);
+            
+            //*** make it bservable for mobx decorator to work.*/
             makeAutoObservable(ProjectStore._instance);
+            
+            //*** fetch data from electron main process and initialize */
+            let projectData = AppComRenderer.getInstance().getData("projectData");
+            this._instance?.initStore(JSON.parse(projectData));
+            
+            //*** Data Sync Events **************************************************/
+            ipcRenderer.on(AppComEventTypes.syncData, (evt, dataKey, stringJson) => {
+                switch (dataKey) {
+                    case "projectData" :
+                        this._instance?.initStore(JSON.parse(stringJson));
+                        break;
+                }
+            });
 
-			// ipcRenderer.on("main.ProjectPropsUpdate", (evt, args) => {
-			// 	ProjectStore._instance?.initStore(args);
-			// 	console.log("[ProjectStore] on main.ProjectPropsUpdate", args);
-			// 	//AssetManager.getInstance().init(ProjectStore._instance);
-			// });
 		}
 		return ProjectStore._instance;
 	}
     
+    /**
+     * Clear existing data and (re)Initialize the ProjectStore.
+     * @param projectProps IProjectProps
+     */
     public initStore(projectProps: IProjectProps) {
         this._selectedBookId = projectProps.appData.selectedBookId ? projectProps.appData.selectedBookId : null;
         
         //-- create author Stores 
+        this._authors.clear();
         for (let authorId in projectProps.projectData.authors) {            
             this._authors.set(authorId, new AuthorStore( projectProps.projectData.authors[authorId] ))
         }
 
-        //-- create publisher Stores 
+        //-- create publisher Stores
+        this._publishers.clear();
         for (let publisherId in projectProps.projectData.publishers) {            
             this._publishers.set(publisherId, new PublisherStore( projectProps.projectData.publishers[publisherId] ))
         }
 
         //-- create book Stores 
+        this._books.clear();
         for (let bookId in projectProps.projectData.books) {            
             this._books.set(bookId, new BookStore( projectProps.projectData.books[bookId] ))
         }
@@ -144,5 +107,44 @@ export default class ProjectStore {
     }
     public set books(value: Map<string, BookStore>) {
         this._books = value;
+    }
+
+    public syncData = () => {
+        AppComRenderer.getInstance().syncData("projectData", JSON.stringify(this.getJson()));
+    }
+
+    public getJson = () => {
+        let books: any = {};
+        this._books.forEach( (bookStore, bookId) => {
+            books[bookId] = bookStore.getJson();
+        });
+
+        let authors: any = {};
+        this._authors.forEach( (authorStore, authorId) => {
+            authors[authorId] = authorStore.getJson();
+        })
+
+        let publishers: any = {};
+        this._publishers.forEach( (publisherStore, publisherId) => {
+            publishers[publisherId] = publisherStore.getJson();
+        })
+
+
+        let data = {
+            appData : {
+                selectedBookId : this._selectedBookId ? this._selectedBookId : undefined
+            },
+            projectData : {
+                books : books, // Map of books
+                authors : authors, // Map of authors 
+                publishers : publishers, // map of publisher
+            }
+        }
+
+        console.log(" =============== ");
+        console.log(data);
+        console.log("----------------");        
+
+        return data;
     }
 }

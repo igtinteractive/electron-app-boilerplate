@@ -6,7 +6,9 @@ export enum AppComEventTypes {
     loadPage = "loadPage",
     setApplicationMenu = "setApplicationMenu",
     setMenu = "setMenu",
-    onMenuClick = "onMenuClick"
+    onMenuClick = "onMenuClick",
+    getData = "getData",
+    syncData = "syncData"
 }
 
 export default class AppComRenderer {
@@ -19,6 +21,7 @@ export default class AppComRenderer {
         if (!AppComRenderer._instance) {
             AppComRenderer._instance = new AppComRenderer();
 
+            //*** Menu Events *************************************/
             ipcRenderer.on(AppComEventTypes.onMenuClick, (evt, args) => {
                 this._instance._menuClickListener.forEach( ( callback, index) => {                    
                     callback(args);
@@ -28,6 +31,10 @@ export default class AppComRenderer {
 
         return AppComRenderer._instance;
     }
+
+    //***********************************************************************************/
+    //*** Windows ***********************************************************************/
+    //***********************************************************************************/
 
     /**
      * Open a modal window if not already open.
@@ -59,6 +66,10 @@ export default class AppComRenderer {
     public loadPage = (windowName:string, title?:string) => {
         ipcRenderer.sendSync(AppComEventTypes.loadPage, {windowName:windowName, title:title});
     }
+
+    //***********************************************************************************/
+    //*** Menu **************************************************************************/
+    //***********************************************************************************/
 
     /**
      * set the Aplication menu ( all windows )
@@ -98,4 +109,29 @@ export default class AppComRenderer {
             this._menuClickListener.splice(index, 1);
         }
     }
+
+    //***********************************************************************************/
+    //*** Data Synch ********************************************************************/
+    //***********************************************************************************/
+
+    /**
+     * retrive the data from AppComMain for the given key.
+     * @param dataKey the unique of the data set.
+     * @returns 
+     */
+    public getData = (dataKey:string) => {
+        return ipcRenderer.sendSync(AppComEventTypes.getData, dataKey);
+    }
+
+    /**
+     * dispatch AppComEventTypes.syncData event to the appComMain.
+     * This will update the dat on appComMain and dispatch a AppComEventTypes.syncData to all open windows
+     * with the new updated data.
+     * @param dataKey 
+     * @param jsonString
+     */
+    public syncData = (dataKey: string, jsonString:any) => {
+        ipcRenderer.sendSync(AppComEventTypes.syncData, dataKey, jsonString);
+    }
+
 }

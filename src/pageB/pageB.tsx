@@ -3,10 +3,17 @@ import React, { Component } from 'react';
 import { createRoot } from 'react-dom/client'
 
 import AppComRenderer from '../electron/appCom/appComRenderer';
+import ProjectStore from '../stores/projectStore';
+import { BookListView } from "../pageA/bookListView";
+import { BookView } from "../pageA/bookView";
+import { observer } from "mobx-react";
 
-export default class PageB extends Component {
+@observer
+export default class PageB extends Component <any, any> {
 
-	private pageBMenu = [		
+	private _projectStore:ProjectStore;
+
+	private pageAMenu = [		
 		{ label: "Open Page", submenu: [
 			{ label: "Open Page A", id:"OpenPageA"},
 			{ label: "Open Page B", id:"OpenPageB"},
@@ -21,10 +28,11 @@ export default class PageB extends Component {
 	];
 
 	constructor(props: any) {
-			super(props);
+		super(props);
+		this._projectStore = ProjectStore.getInstance();		
 	}
 
-  	/**
+	/**
 	 * called when the window is mounted (ready to display ) 
 	 */
 	componentDidMount() {		
@@ -32,9 +40,8 @@ export default class PageB extends Component {
 		//add Menu Click Listener
 		AppComRenderer.getInstance().addMenuClickListener(this.onMenuClick);
 
-		// Set menu
-		AppComRenderer.getInstance().setMenu(this.pageBMenu);		
-		
+		// Set aplication menu
+		AppComRenderer.getInstance().setApplicationMenu(this.pageAMenu);
 	}
 
 	/**
@@ -53,7 +60,7 @@ export default class PageB extends Component {
 			break;
 
 			case "OpenPageB" :
-				AppComRenderer.getInstance().openWindow("pageB", "Page B Open", false, {width:300, height:300});
+				AppComRenderer.getInstance().openWindow("pageB", "Page B Open", false, {width:800, height:600});
 			break;
 
 			case "OpenPageC" :
@@ -76,12 +83,34 @@ export default class PageB extends Component {
 	}
 
 	render() {
-		return (
-		<div>
-			<h1> This is Page B</h1>			
+		console.log("[PageB render]");
+
+		/** create an array that containe the display <div> for each book. */
+		let books = new Array<any>();		
+		(this._projectStore.books as Map<string, any>).forEach( (book, bookId) => {			
+			books.push( <div key={bookId}  style={{margin:"10px"}}>- {book.title} </div> )
+		})		
+		
+		let selectedBookId = this._projectStore.selectedBookId ? this._projectStore.selectedBookId : "";
+		let selectedBook = this._projectStore.books.get(selectedBookId);
+
+		return <div className="fl-vert-container" style={{margin:"10px"}}>
+			<h1>This is Page B</h1>	
+			<div className="fl-horiz-container">
+				<BookListView books={this._projectStore.books} selectedBookId={selectedBook?.bookId} 
+					onSelectionChange={ (evt:any) => {
+						this._projectStore.selectedBookId = evt;						
+					}}>
+				</BookListView>
+
+				<BookView book={selectedBook}></BookView>
+			</div>
+			<div className="fl-horiz-container">				
+				<button style={{margin:"10px"}} onClick={() => { this._projectStore.syncData();	}}> Synch Data </button>
+				<div className="fl-expand-child"></div>
+			</div>
 		</div>
-		);
-	}
+	}	
 }
 
 let root = document.getElementById('root');

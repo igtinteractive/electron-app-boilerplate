@@ -7,8 +7,8 @@ export default class AppComMain {
     /** Map of all current open windows */
     private _windows: Map<string, any> = new Map<string, any>();
 
-	//** Array of menuClick Call back functoin */
-	private static _menuClickListener = Array<Function>();
+	//** map of json string data use for syncing */
+	private _dataMap : Map<string, string> = new Map<string, string>();
 
 
     /** return the singleton for this class */
@@ -16,6 +16,7 @@ export default class AppComMain {
 		if (!AppComMain._instance) {
 			AppComMain._instance = new AppComMain();
 
+			//*** Windows Events **************************************************/
 			ipcMain.on(AppComEventTypes.openWindow, async (event, args) => {
 				this._instance.openWindow(args);
 				event.returnValue = "done";
@@ -33,6 +34,7 @@ export default class AppComMain {
 				event.returnValue = "done";
 			});
 
+			//*** Menu Events *******************************************************/
 			ipcMain.on(AppComEventTypes.setMenu, async (event, args) => {            
 				let menu = Menu.buildFromTemplate(JSON.parse(args));
 				this.setMenuClick(menu);
@@ -43,21 +45,23 @@ export default class AppComMain {
 				event.returnValue = "done";
 			});
 
-      }
-      return AppComMain._instance;
+			//*** Data Sync Events **************************************************/
+			ipcMain.on(AppComEventTypes.getData, async (event, dataKey: string) => {				
+				event.returnValue = this._instance.getData(dataKey);
+			});
+
+			ipcMain.on(AppComEventTypes.syncData, async (event, dataKey: string, jsonString: string) => {				
+				this._instance.syncData(dataKey, jsonString);
+				event.returnValue = "done";
+			});
+		}
+		return AppComMain._instance;
     }
 
-    private static setMenuClick = (menu:Menu) => {
-		menu.items.forEach( (menuItem, index) => {			
-			if (menuItem.id) { menuItem.click = () => {                
-				let win = BrowserWindow.getFocusedWindow();				
-				if (win) { win.webContents.send(AppComEventTypes.onMenuClick, menuItem.id); }
-			}}
-			if (menuItem.submenu) {
-				this.setMenuClick(menuItem.submenu);
-			}
-		});
-  	}
+
+	//***********************************************************************************/
+    //*** Windows ***********************************************************************/
+    //***********************************************************************************/
 
 	/**
 	 * Open a modal window if not already open.
@@ -172,6 +176,49 @@ export default class AppComMain {
 
 			}
 		}
+	}
+
+	//***********************************************************************************/
+    //*** Menu **************************************************************************/
+    //***********************************************************************************/
+	private static setMenuClick = (menu:Menu) => {
+		menu.items.forEach( (menuItem, index) => {			
+			if (menuItem.id) { menuItem.click = () => {                
+				let win = BrowserWindow.getFocusedWindow();				
+				if (win) { win.webContents.send(AppComEventTypes.onMenuClick, menuItem.id); }
+			}}
+			if (menuItem.submenu) {
+				this.setMenuClick(menuItem.submenu);
+			}
+		});
+  	}
+
+	//***********************************************************************************/
+    //*** Data Synch ********************************************************************/
+    //***********************************************************************************/
+
+	/**
+	 * get the data fomr the data Map
+	 * @param dataKey the unique id for this data set.
+	 * @returns 
+	 */
+	public getData = (dataKey:string) => {
+		return this._dataMap.get(dataKey);
+	}
+
+	/**
+	 * set the data map, and dispatch AppComEventTypes.syncData to all open windows. 
+	 * @param dataKey the unique id for this data set.
+	 * @param jsonString the jsonString for the data.
+	 */
+	public syncData = (dataKey:string, jsonString: string) => {
+		/** set the dat  */
+		this._dataMap.set(dataKey, jsonString);
+		
+		//** dispatch to all open widdows */
+		this._windows.forEach( (browserWindow: BrowserWindow, key: string) => {			
+			browserWindow.webContents.send(AppComEventTypes.syncData, dataKey, jsonString);
+		})
 	}
 
 }

@@ -6,7 +6,9 @@ import AppComRenderer from '../electron/appCom/appComRenderer';
 import ProjectStore from '../stores/projectStore';
 import { BookListView } from "./bookListView";
 import { BookView } from "./bookView";
+import { observer } from "mobx-react";
 
+@observer
 export default class PageA extends Component <any, any>{
 
 	private _projectStore:ProjectStore;
@@ -26,9 +28,8 @@ export default class PageA extends Component <any, any>{
 	];
 
 	constructor(props: any) {
-		super(props);
+		super(props);		
 		this._projectStore = ProjectStore.getInstance();
-		this.state = { selectedBookId:null }
 	}
 
 	/**
@@ -51,6 +52,10 @@ export default class PageA extends Component <any, any>{
 		AppComRenderer.getInstance().removeMenuClickListener(this.onMenuClick);
 	}
 
+	/**
+	 * Handle the menuclick events.
+	 * @param id 
+	 */
 	private onMenuClick = (id:string) => {
 		console.log(`${id} CLICKED`);
 		switch (id) {
@@ -59,7 +64,7 @@ export default class PageA extends Component <any, any>{
 			break;
 
 			case "OpenPageB" :
-				AppComRenderer.getInstance().openWindow("pageB", "Page B Open", false, {width:300, height:300});
+				AppComRenderer.getInstance().openWindow("pageB", "Page B Open", false, {width:800, height:600});
 			break;
 
 			case "OpenPageC" :
@@ -82,15 +87,15 @@ export default class PageA extends Component <any, any>{
 	}
 
 	render() {
+
+		/** create an array that containe the display <div> for each book. */
 		let books = new Array<any>();		
 		(this._projectStore.books as Map<string, any>).forEach( (book, bookId) => {			
 			books.push( <div key={bookId}  style={{margin:"10px"}}>- {book.title} </div> )
 		})		
-
-		//let selectedBookId = this.state.selectedBookId;
-		let selectedBook = this._projectStore.books.get(this.state.selectedBookId)
-
-		console.log(this._projectStore.selectedBookId);
+		
+		let selectedBookId = this._projectStore.selectedBookId ? this._projectStore.selectedBookId : "";
+		let selectedBook = this._projectStore.books.get(selectedBookId);
 
 		return <div className="fl-vert-container" style={{margin:"10px"}}>
 			<h1>This is Page A</h1>	
@@ -98,12 +103,15 @@ export default class PageA extends Component <any, any>{
 				<BookListView books={this._projectStore.books} selectedBookId={selectedBook?.bookId} 
 					onSelectionChange={ (evt:any) => {
 						this._projectStore.selectedBookId = evt;
-						this.setState({selectedBookId:evt});
 					}}>
 				</BookListView>
 
 				<BookView book={selectedBook}></BookView>
-			</div>			
+			</div>
+			<div className="fl-horiz-container">				
+				<button style={{margin:"10px"}} onClick={() => { this._projectStore.syncData();	}}> Synch Data </button>
+				<div className="fl-expand-child"></div>
+			</div>
 		</div>
 	}	
 }

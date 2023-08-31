@@ -53,7 +53,7 @@ export default class PageC extends Component {
 			break;
 
 			case "OpenPageB" :
-				AppComRenderer.getInstance().openWindow("pageB", "Page B Open", false, {width:300, height:300});
+				AppComRenderer.getInstance().openWindow("pageB", "Page B Open", false, {width:800, height:600});
 			break;
 
 			case "OpenPageC" :

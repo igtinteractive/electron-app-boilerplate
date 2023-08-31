@@ -3,7 +3,6 @@ import React , { Component } from "react";
 import { InputControl } from "../sharedComponents/inputControl";
 import BookStore from "../stores/bookStore";
 import ProjectStore from "../stores/projectStore";
-import { IReactionDisposer, autorun } from "mobx";
 
 export interface IBookViewProps extends React.HTMLAttributes<HTMLElement> {
        book?:BookStore
@@ -16,13 +15,9 @@ export class BookView extends Component < IBookViewProps > {
 	}
 
     render() {
+        //console.log("[BookView render]");
 
-        console.log("[BookView render]");
-        //let book = this.props.book;
-
-        let selectedId = ProjectStore.getInstance().selectedBookId;
-        let book = selectedId ? ProjectStore.getInstance().books.get( selectedId ) : null;
-
+        let book = this.props.book;        
         if (book) {
             return <fieldset style ={{ width: "100%", borderRadius: "8px" }} >
                 <legend style={{marginLeft:"10px"}}>Book Info</legend>

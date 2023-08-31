@@ -60,5 +60,14 @@ export default class AuthorStore {
         this._email = value;
     }
     
+    public getJson = () => {
+        let data = {
+            authorId : this._authorId,
+            firstName : this._firstName,
+            lastName : this._lastName,
+            email : this._email
+        }
+        return data;
+    }
     
 }

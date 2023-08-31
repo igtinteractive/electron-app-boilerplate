@@ -54,5 +54,14 @@ export default class PublisherStore {
         this._email = value;
     }
 
+    public getJson = () => {
+        let data = {
+            publisherId : this._publisherId,
+            name : this._name,
+            contacName : this._contacName,
+            email : this._email
+        }
+        return data;
+    }
 
 }
