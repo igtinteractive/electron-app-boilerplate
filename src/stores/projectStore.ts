@@ -32,7 +32,7 @@ export default class ProjectStore {
             //*** create the static _instance for the singleton */
 			ProjectStore._instance = new ProjectStore();
             
-            //*** make it bservable for mobx decorator to work.*/
+            //*** make it oservable for mobx decorator to work.*/
             makeAutoObservable(ProjectStore._instance);
             
             //*** fetch data from electron main process and initialize */
