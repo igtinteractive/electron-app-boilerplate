@@ -2,7 +2,7 @@ This boilerplate is using electron, webpack, typescript and react.
 It allows for multiple windows / entry, and suport hot reload.
 
 ## Installation
-clone the repo and run Yarn.
+clone the repo and run Yarn install.
 
 
 ## Usage
@@ -41,6 +41,10 @@ setApplicationMenu : to set the mian aplication menu
 setMenu : to set the current window menu.
 addMenuClickListener : add callback function when a menu item is click.
 removeMenuClickListener : remove the menuCLick listener. ( shoudl be called in the window componentWillUnmount to make sure to clean up unused listener. ) 
+
+## Data & Store
+In order to keep the data syncronize between windows.
+The ProjectStore uses the AppComRenderer getData and syncData to keep the data in sync.
 
 #### references :
 boilerplate base on https://dev.to/franamorim/tutorial-reminder-widget-with-electron-react-1hj9
