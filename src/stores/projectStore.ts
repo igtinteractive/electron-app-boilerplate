@@ -4,6 +4,7 @@ import PublisherStore from "./publisherStore";
 import BookStore from "./bookStore";
 import { ipcRenderer } from "electron";
 import AppComRenderer, { AppComEventTypes } from "../electron/appCom/appComRenderer";
+import * as fs from "fs-extra";
 
 export interface IProjectProps {
     appData : {
@@ -51,11 +52,23 @@ export default class ProjectStore {
 		return ProjectStore._instance;
 	}
     
+
+    public loadData = (filePath:string) => {
+        const json: any = fs.existsSync(filePath) ? fs.readFileSync(filePath) : null;
+        if (json) {
+            this.initStore(JSON.parse(json));
+        }        
+    }
+
+    public saveData = (filePath:string) => {
+        fs.writeFile(filePath, JSON.stringify(this.getJson()));
+    }
+
     /**
      * Clear existing data and (re)Initialize the ProjectStore.
      * @param projectProps IProjectProps
      */
-    public initStore(projectProps: IProjectProps) {
+    public initStore = (projectProps: IProjectProps) => {
         this._selectedBookId = projectProps.appData.selectedBookId ? projectProps.appData.selectedBookId : null;
         
         //-- create author Stores 

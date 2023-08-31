@@ -20,7 +20,7 @@ export class BookView extends Component < IBookViewProps > {
         let book = this.props.book;        
         if (book) {
             return <fieldset style ={{ width: "100%", borderRadius: "8px" }} >
-                <legend style={{marginLeft:"10px"}}>Book Info</legend>
+                <legend style={{marginLeft:"10px"}}>Book <span style={{fontSize:"0.8em", color:"gray", paddingLeft:"3px", paddingRight:"3px"}}>{book.bookId}</span></legend>
                 <div style={{padding:"8px"}}>
                     Title :
                     <InputControl value={book.title} onChange={ (evt) => {

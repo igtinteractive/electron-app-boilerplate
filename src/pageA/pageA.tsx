@@ -7,13 +7,18 @@ import ProjectStore from '../stores/projectStore';
 import { BookListView } from "./bookListView";
 import { BookView } from "./bookView";
 import { observer } from "mobx-react";
+import { dialog } from "electron";
 
 @observer
 export default class PageA extends Component <any, any>{
 
 	private _projectStore:ProjectStore;
 
-	private pageAMenu = [		
+	private pageAMenu = [
+		{ label: "Project", submenu: [
+				{ label: "Load data", id:"LoadData"},
+				{ label: "Save data", id:"SaveData"},
+		]},	
 		{ label: "Open Page", submenu: [
 			{ label: "Open Page A", id:"OpenPageA"},
 			{ label: "Open Page B", id:"OpenPageB"},
@@ -59,6 +64,14 @@ export default class PageA extends Component <any, any>{
 	private onMenuClick = (id:string) => {
 		console.log(`${id} CLICKED`);
 		switch (id) {
+			case "LoadData" :				
+				this.loadData();		
+				break;
+
+			case "SaveData" :
+				this.saveData();
+				break;
+			
 			case "OpenPageA" :
 				AppComRenderer.getInstance().openWindow("pageA", "Page A", true);
 			break;
@@ -84,6 +97,20 @@ export default class PageA extends Component <any, any>{
 			break;
 			
 		}
+	}
+
+	private loadData = () => {
+		let files = AppComRenderer.getInstance().showOpenDialogSync({ properties: ["openFile"], filters: [{name: "project", extensions: ["json"]}]});
+		if (files && files[0]) {
+			this._projectStore.loadData(files[0]);
+		}				
+	}
+
+	private saveData = () => {
+		let filePath = AppComRenderer.getInstance().showSaveDialogSync();		
+		if (filePath) {
+			this._projectStore.saveData(filePath);
+		}				
 	}
 
 	render() {

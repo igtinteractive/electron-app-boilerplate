@@ -4,9 +4,11 @@ export enum AppComEventTypes {
     openWindow = "openWindow",
     closeWindow = "closeWindow",
     loadPage = "loadPage",
+    showOpenDialogSync = "showOpenDialogSync",
+    showSaveDialogSync = "showSaveDialogSync", 
     setApplicationMenu = "setApplicationMenu",
     setMenu = "setMenu",
-    onMenuClick = "onMenuClick",
+    onMenuClick = "onMenuClick",    
     getData = "getData",
     syncData = "syncData"
 }
@@ -65,6 +67,36 @@ export default class AppComRenderer {
      */
     public loadPage = (windowName:string, title?:string) => {
         ipcRenderer.sendSync(AppComEventTypes.loadPage, {windowName:windowName, title:title});
+    }
+
+    /**
+     * Show a Dialog box.  (dialog.showOpenDialogSync)
+     * @param options  Electron.OpenDialogSyncOptions
+     * @returns {void}
+     */
+    public showOpenDialogSync = (options: Electron.OpenDialogSyncOptions): string[] | undefined => {
+        let results = ipcRenderer.sendSync(AppComEventTypes.showOpenDialogSync, JSON.stringify(options));
+        if (results) {
+            return JSON.parse(results);
+        } else {
+            return undefined;
+        }
+    }
+
+    /**
+     * Show a Dialog box.  (dialog.showSaveDialogSync)
+     * @param options  Electron.SaveDialogOptions
+     * @returns {void}
+     */
+    public showSaveDialogSync = (options?: Electron.SaveDialogOptions): string | undefined => {
+        let jsonOption = undefined;
+        if (options) { jsonOption = JSON.stringify(options); }
+        let results = ipcRenderer.sendSync(AppComEventTypes.showSaveDialogSync, jsonOption);
+        if (results) {
+            return JSON.parse(results);
+        } else {
+            return undefined;
+        }
     }
 
     //***********************************************************************************/

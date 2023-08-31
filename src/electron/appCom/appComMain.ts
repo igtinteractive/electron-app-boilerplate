@@ -1,4 +1,4 @@
-import { BrowserWindow, Menu, ipcMain } from "electron";
+import { BrowserWindow, Menu, dialog, ipcMain } from "electron";
 import { AppComEventTypes } from "./appComRenderer";
 
 export default class AppComMain {
@@ -27,6 +27,19 @@ export default class AppComMain {
 				event.returnValue = "done";
 			});
 
+			ipcMain.on(AppComEventTypes.showOpenDialogSync, async (event, options) => {				
+				let results = dialog.showOpenDialogSync(JSON.parse(options));
+            	event.returnValue = JSON.stringify(results);
+			});
+
+			ipcMain.on(AppComEventTypes.showSaveDialogSync, async (event, options) => {						
+				let results = dialog.showSaveDialogSync(options ? options : {});
+            	event.returnValue = JSON.stringify(results);
+			});
+			
+
+			//*** Menu Events *******************************************************/
+
 			ipcMain.on(AppComEventTypes.setApplicationMenu, async (event, args) => {            
 				let menu = Menu.buildFromTemplate(JSON.parse(args));
 				this.setMenuClick(menu);
@@ -34,7 +47,6 @@ export default class AppComMain {
 				event.returnValue = "done";
 			});
 
-			//*** Menu Events *******************************************************/
 			ipcMain.on(AppComEventTypes.setMenu, async (event, args) => {            
 				let menu = Menu.buildFromTemplate(JSON.parse(args));
 				this.setMenuClick(menu);
@@ -178,6 +190,7 @@ export default class AppComMain {
 		}
 	}
 
+		
 	//***********************************************************************************/
     //*** Menu **************************************************************************/
     //***********************************************************************************/
@@ -214,7 +227,7 @@ export default class AppComMain {
 	public syncData = (dataKey:string, jsonString: string) => {
 		/** set the dat  */
 		this._dataMap.set(dataKey, jsonString);
-		
+
 		//** dispatch to all open widdows */
 		this._windows.forEach( (browserWindow: BrowserWindow, key: string) => {			
 			browserWindow.webContents.send(AppComEventTypes.syncData, dataKey, jsonString);
