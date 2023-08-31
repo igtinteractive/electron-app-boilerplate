@@ -43,7 +43,7 @@ export default class PageB extends Component <any, any> {
 		AppComRenderer.getInstance().addMenuClickListener(this.onMenuClick);
 
 		// Set aplication menu
-		AppComRenderer.getInstance().setMenu(this.pageAMenu);
+		AppComRenderer.getInstance().setApplicationMenu(this.pageAMenu);
 	}
 
 	/**

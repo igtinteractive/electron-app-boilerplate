@@ -33,7 +33,7 @@ export default class PageC extends Component {
 		AppComRenderer.getInstance().addMenuClickListener(this.onMenuClick);
 
 		// Set menu
-		AppComRenderer.getInstance().setMenu(this.pageCMenu);		
+		AppComRenderer.getInstance().setApplicationMenu(this.pageCMenu);		
 		
 	}
 

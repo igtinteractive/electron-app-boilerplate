@@ -113,6 +113,7 @@ export default class AppComRenderer {
 
     /**
      * Set the Current Windows menu ( other windows remain the same )
+     * Note : Behavior may not work opn Mac ?
      * @param menu Electron.Menu
      */
     public setMenu = (menu: any) => {        
