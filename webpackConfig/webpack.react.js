@@ -13,6 +13,7 @@ module.exports = {
 		pageA : "./src/pageA/pageA.tsx",
 		pageB : "./src/pageB/pageB.tsx",
 		pageC : "./src/pageC/pageC.tsx",
+		pageExcel : "./src/pageExcel/pageExcel.tsx",
 	},
 
 	// each page must have a plugin to get compile as a html page correctly.
@@ -32,6 +33,12 @@ module.exports = {
 		new HtmlWebpackPlugin({
 			filename:"pageC.html",
 			chunks: ['pageC'],		
+			template: path.resolve(__dirname, "./../src/electron/index.html")
+		}),
+
+		new HtmlWebpackPlugin({
+			filename:"pageExcel.html",
+			chunks: ['pageExcel'],		
 			template: path.resolve(__dirname, "./../src/electron/index.html")
 		})
 	],
