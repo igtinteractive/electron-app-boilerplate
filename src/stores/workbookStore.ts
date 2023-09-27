@@ -47,12 +47,36 @@ export default class WorkbookStore {
     public getSelectedCellValues = () => {
         let workbook = this._workbook;
         let worksheet = workbook.Sheets[this._selectedSheet];
-        let opts = {header:1, range : this._selectedRange};
         if(XLSX.utils.decode_range(this._selectedRange).s.c==-1){
             return [];
         }
+        let opts = {header:1, range : this._selectedRange};
         const data: any[] = XLSX.utils.sheet_to_json(worksheet, opts);
         return data;
+    }
+
+    public getCellValuesBySheetAndRange = (selectedSheet:string, selectedRange:string) => {
+        let workbook = this._workbook;
+        let worksheet = workbook.Sheets[selectedSheet];
+        if(XLSX.utils.decode_range(selectedRange).s.c==-1){
+            return [];
+        }
+        let opts = {range : selectedRange};
+        const data: any[] = XLSX.utils.sheet_to_json(worksheet, opts);
+        return data;
+    }
+
+    public getCellHeadersBySheetAndRange = (selectedSheet:string, selectedRange:string) => {
+        let workbook = this._workbook;
+        let worksheet = workbook.Sheets[selectedSheet];
+        let decodedRange = XLSX.utils.decode_range(selectedRange);
+        if(decodedRange.s.c==-1){
+            return [];
+        }
+        decodedRange.e.r = decodedRange.s.r;
+        let opts = {header:1, range : XLSX.utils.encode_range(decodedRange)};
+        const data: string[] = XLSX.utils.sheet_to_json(worksheet, opts);
+        return data[0];
     }
 
     /**

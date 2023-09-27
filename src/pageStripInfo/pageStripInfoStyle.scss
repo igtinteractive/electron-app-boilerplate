@@ -1,0 +1,18 @@
+@import "../sharedCss/flexLayout.scss";
+
+html, body, .fl-vert-container{    
+    background-color: rgb(29, 0, 97);
+    color: white;
+}
+
+table {
+    font-family: arial, sans-serif;
+    border-collapse: collapse;
+    width: 100%;
+  }
+  
+  td, th {
+    border: 1px solid #dddddd;
+    text-align: left;
+    padding: 8px;
+  }
