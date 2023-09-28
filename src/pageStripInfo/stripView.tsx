@@ -31,7 +31,7 @@ export class StripView extends Component < IStripViewProps > {
                     <InputControl value={strip.tableRange} onChange={ (evt) => {
                                 if(strip){
                                     strip.tableRange = evt.target.value;
-
+                                    let headers = this._workbookStore.getCellHeadersBySheetAndRange(stripInfo.excelSheet,strip.tableRange);
                                     strip.symbolIdColumn = headers[0];
                                     strip.weightColumn = headers[0];
                                 }

@@ -15,7 +15,7 @@ export default class StripStore {
     @observable private _tableRange: string;
     @observable private _symbolIdColumn: string;
     @observable private _weightColumn: string;
-    @observable private _stops: Map<string, StopStore> = new Map<string, StopStore>();
+    @observable private _stops: Map<number, StopStore> = new Map<number, StopStore>();
 
     constructor(props:IStripStore) {
 
@@ -58,10 +58,10 @@ export default class StripStore {
     }
 
     @computed
-    public get stops(): Map<string, StopStore> {
+    public get stops(): Map<number, StopStore> {
         return this._stops;
     }
-    public set stops(value: Map<string, StopStore>) {
+    public set stops(value: Map<number, StopStore>) {
         this._stops = value;
     }
 
@@ -76,5 +76,27 @@ export default class StripStore {
         }
         return data;
     }
+
+    public refreshStops = (values : any[]) =>{
+        this._stops.clear();
+        values.forEach((value, index)=>{
+            let stop = new StopStore({symbolID : value[this._symbolIdColumn], weight:value[this._weightColumn]});
+            this._stops.set(index, stop);
+        })
+    };
+
+    public getJsonDataForXml = () => {
+        let stops: any[] = [];
+        this._stops.forEach( (stopStore) => {
+            stops.push(stopStore.getJsonDataForXml());
+        })
+        let data = {
+            _attributes: { 
+                name : this._name
+            },
+            Stop: stops
+        }
+        return data
+    }  
 
 }

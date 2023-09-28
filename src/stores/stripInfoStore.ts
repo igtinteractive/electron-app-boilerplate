@@ -1,6 +1,8 @@
 
 import { computed, makeAutoObservable, observable } from "mobx";
 import StripStore from "./stripStore";
+import * as fs from "fs-extra";
+import WorkbookStore from "./workbookStore";
 
 export interface IStripInfoStore {
     name : string,
@@ -10,6 +12,7 @@ export interface IStripInfoStore {
 }
 
 export default class StripInfoStore {
+    private _workbookStore:WorkbookStore;
 
     @observable private _name: string;
     @observable private _excelSheet: string;
@@ -19,7 +22,7 @@ export default class StripInfoStore {
     constructor(props:IStripInfoStore) {
 
         makeAutoObservable(this);
-
+        this._workbookStore = WorkbookStore.getInstance();
         this._name = props.name??"";
         this._excelSheet = props.excelSheet??"";
         this._selectedStripName = props.selectedStripName??"";
@@ -73,6 +76,32 @@ export default class StripInfoStore {
             strips : strips
         }
         return data;
+    }
+
+    public getJsonDataForXml = () => {
+        let strips: any[] = [];
+        this._strips.forEach( (stopStore) => {
+            strips.push(stopStore.getJsonDataForXml());
+        })
+        let data = {
+            StripInfo:{
+                _attributes: { 
+                    name : this._name
+                },
+                Strip: strips
+            }
+        }
+        return data
+    }  
+
+    public saveXmlData = (filePath:string) => {
+        this.strips.forEach((strip)=>{
+            let values = this._workbookStore.getCellValuesBySheetAndRange(this._excelSheet,strip.tableRange);
+            strip.refreshStops(values);
+        })
+        var convert = require('xml-js');
+        var options = {compact: true, ignoreComment: true, spaces: 4};
+        fs.writeFile(filePath, convert.js2xml(this.getJsonDataForXml(), options));
     }
 
 }

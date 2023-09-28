@@ -53,6 +53,13 @@ export default class PageStripInfo extends Component {
 		}				
 	}
 
+	private saveData = () => {
+		let filePath = AppComRenderer.getInstance().showSaveDialogSync();		
+		if (filePath) {
+			this._stripInfoStore.saveXmlData(filePath);
+		}				
+	}
+
 	render() {
 		let selectedStrip = this._stripInfoStore.strips.get(this._stripInfoStore.selectedStripName);
 		return <div className="fl-vert-container" style={{margin:"10px"}}>
@@ -83,6 +90,10 @@ export default class PageStripInfo extends Component {
 			</div>
 			<div className="fl-horiz-container">
 				<StripView strip={selectedStrip} stripInfo={this._stripInfoStore}/>
+			</div>
+			<div className="fl-horiz-container">				
+				<button style={{margin:"10px"}} onClick={() => { this.saveData();	}}> Export to XML </button>
+				<div className="fl-expand-child"></div>
 			</div>
 		</div>
 	}

@@ -4,20 +4,20 @@ import { computed, makeAutoObservable, observable } from "mobx";
 export interface IStopStore {
     symbolID : string,
     weight : string,
-    min : string,
-    max : string,
-    value : string,
-    suit : string,
+    min? : string,
+    max? : string,
+    value? : string,
+    suit? : string,
 }
 
 export default class StopStore {
 
-    @observable private _symbolID: string;   
-    @observable private _weight: string;   
-    @observable private _min: string;    
-    @observable private _max: string;  
-    @observable private _value: string;  
-    @observable private _suit: string;  
+    private _symbolID: string;   
+    private _weight: string;   
+    private _min?: string;    
+    private _max?: string;  
+    private _value?: string;  
+    private _suit?: string;  
 
     constructor(props:IStopStore) {        
 
@@ -46,7 +46,7 @@ export default class StopStore {
     }
     
     @computed
-    public get min(): string {
+    public get min(): string | undefined {
         return this._min;
     }
     public set min(value: string) {
@@ -59,7 +59,7 @@ export default class StopStore {
     }
     
     @computed
-    public get max(): string {
+    public get max(): string | undefined {
         return this._max;
     }
     public set max(value: string) {
@@ -67,7 +67,7 @@ export default class StopStore {
     }
 
     @computed
-    public get value(): string {
+    public get value(): string | undefined {
         return this._value;
     }
     public set value(value: string) {
@@ -75,7 +75,7 @@ export default class StopStore {
     }
 
     @computed
-    public get suit(): string {
+    public get suit(): string | undefined {
         return this._suit;
     }
     public set suit(value: string) {
@@ -94,4 +94,26 @@ export default class StopStore {
         return data;
     }
     
+    public getJsonDataForXml = () => {
+        let attributes: any = {
+            symbolID : this._symbolID,
+            weight : this._weight
+        };
+        if(this._min){
+            attributes["min"] = this._min;
+        }
+        if(this._max){
+            attributes["max"] = this._max;
+        }
+        if(this._value){
+            attributes["value"] = this._value;
+        }
+        if(this._suit){
+            attributes["suit"] = this._suit;
+        }
+        let data = {
+            _attributes: attributes
+        }
+        return data
+    }  
 }
