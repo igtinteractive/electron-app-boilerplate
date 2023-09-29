@@ -43,7 +43,6 @@
 		"webpack-dev-server": "^4.15.1"
 	},
 	"dependencies": {
-		"xlsx": "https://cdn.sheetjs.com/xlsx-0.20.0/xlsx-0.20.0.tgz",
-		"xml-js": "^1.6.11"
+		"xlsx": "^0.18.5"
 	}
 }
