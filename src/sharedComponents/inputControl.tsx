@@ -21,8 +21,8 @@ export class InputControl extends Component < React.InputHTMLAttributes<HTMLInpu
 
 	private handleOnKeyPress = (evt: any) => {
 		if (evt.key == "Enter") {
-			if (this.props.onChange) {
-				this.props.onChange(evt);
+			if (this.props.onKeyDown) {
+				this.props.onKeyDown(evt);
 			}
 		}
 	}

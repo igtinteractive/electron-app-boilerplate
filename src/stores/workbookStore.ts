@@ -45,8 +45,7 @@ export default class WorkbookStore {
     }
 
     public getSelectedCellValues = () => {
-        let workbook = this._workbook;
-        let worksheet = workbook.Sheets[this._selectedSheet];
+        let worksheet = this._workbook.Sheets[this._selectedSheet];
         if(XLSX.utils.decode_range(this._selectedRange).s.c==-1){
             return [];
         }
@@ -55,28 +54,64 @@ export default class WorkbookStore {
         return data;
     }
 
+    private isValidRange = (range: string) => {
+        return XLSX.utils.decode_range(range).s.c==-1;
+    }
+
     public getCellValuesBySheetAndRange = (selectedSheet:string, selectedRange:string) => {
-        let workbook = this._workbook;
-        let worksheet = workbook.Sheets[selectedSheet];
-        if(XLSX.utils.decode_range(selectedRange).s.c==-1){
+        let worksheet = this._workbook.Sheets[selectedSheet];
+        let decodedRange = XLSX.utils.decode_range(selectedRange);
+        if(decodedRange.s.c==-1){
             return [];
         }
-        let opts = {range : selectedRange};
+        decodedRange.s.r +=1;
+        let opts = {header:1, range : XLSX.utils.encode_range(decodedRange)};
         const data: any[] = XLSX.utils.sheet_to_json(worksheet, opts);
         return data;
     }
+    public getFirstRowCellValuesBySheetAndRange = (selectedSheet:string, selectedRange:string) => {
+        let worksheet = this._workbook.Sheets[selectedSheet];
+        let decodedRange = XLSX.utils.decode_range(selectedRange);
+        if(decodedRange.s.c==-1){
+            return [];
+        }
+        decodedRange.s.r +=1;
+        decodedRange.e.r = decodedRange.s.r;
+        let opts = {header:1, range : XLSX.utils.encode_range(decodedRange)};
+        const data: any[] = XLSX.utils.sheet_to_json(worksheet, opts);
+        return data[0];
+    }
+    public getLastRowCellValuesBySheetAndRange = (selectedSheet:string, selectedRange:string) => {
+        let worksheet = this._workbook.Sheets[selectedSheet];
+        let decodedRange = XLSX.utils.decode_range(selectedRange);
+        if(decodedRange.s.c==-1){
+            return [];
+        }
+        decodedRange.s.r = decodedRange.e.r;
+        let opts = {header:1, range : XLSX.utils.encode_range(decodedRange)};
+        const data: any[] = XLSX.utils.sheet_to_json(worksheet, opts);
+        return data[0];
+    }
 
-    public getCellHeadersBySheetAndRange = (selectedSheet:string, selectedRange:string) => {
-        let workbook = this._workbook;
-        let worksheet = workbook.Sheets[selectedSheet];
+    public getRowCountByRange = (selectedRange:string) => {
+        let decodedRange = XLSX.utils.decode_range(selectedRange);
+        if(decodedRange.s.c==-1){
+            return 0;
+        }
+        return decodedRange.e.r-decodedRange.s.r;
+    }
+
+    public getCellHeadersBySheetAndRange = (selectedSheet:string, selectedRange:string) : string[] => {
+        let worksheet = this._workbook.Sheets[selectedSheet];
         let decodedRange = XLSX.utils.decode_range(selectedRange);
         if(decodedRange.s.c==-1){
             return [];
         }
         decodedRange.e.r = decodedRange.s.r;
         let opts = {header:1, range : XLSX.utils.encode_range(decodedRange)};
-        const data: string[] = XLSX.utils.sheet_to_json(worksheet, opts);
-        return data[0];
+        const data: string[][] = XLSX.utils.sheet_to_json(worksheet, opts);
+        let headers : string[] = data[0];
+        return headers;
     }
 
     /**

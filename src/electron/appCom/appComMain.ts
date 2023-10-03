@@ -33,7 +33,7 @@ export default class AppComMain {
 			});
 
 			ipcMain.on(AppComEventTypes.showSaveDialogSync, async (event, options) => {						
-				let results = dialog.showSaveDialogSync(options ? options : {});
+				let results = dialog.showSaveDialogSync(options ? JSON.parse(options) : {});
             	event.returnValue = JSON.stringify(results);
 			});
 			

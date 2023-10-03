@@ -2,13 +2,14 @@ import { observer } from "mobx-react";
 import React , { Component } from "react";
 import StripInfoStore from "../stores/stripInfoStore";
 import WorkbookStore from "../stores/workbookStore";
+import { InputControl } from "../sharedComponents/inputControl";
 
-export interface ISelectSheetViewProps extends React.HTMLAttributes<HTMLElement> {
+export interface IStripInfoViewProps extends React.HTMLAttributes<HTMLElement> {
     stripInfoStore?:StripInfoStore
 }
 
 @observer
-export class SelectSheetView extends Component<ISelectSheetViewProps> {
+export class StripInfoView extends Component<IStripInfoViewProps> {
 
     private _workbookStore:WorkbookStore;
 
@@ -22,7 +23,7 @@ export class SelectSheetView extends Component<ISelectSheetViewProps> {
         let sheets = this._workbookStore.sheets;  
         let stripInfoStore =  this.props.stripInfoStore;
         if (sheets && sheets.length>0 && stripInfoStore) {
-            return <fieldset style ={{ width: "100%", borderRadius: "8px" }} >
+            return <div style ={{ width: "100%" }} >
                 <div style={{padding:"8px"}}>
                     Sheet :
                     <select value={ stripInfoStore.excelSheet }
@@ -39,7 +40,16 @@ export class SelectSheetView extends Component<ISelectSheetViewProps> {
                         }
                     </select>
                 </div>
-            </fieldset>
+                <div style={{padding:"8px"}}>
+                    Name :
+                    <InputControl value={stripInfoStore.name} onChange={ (evt) => {
+                                if(stripInfoStore){
+                                    stripInfoStore.name = evt.target.value;
+                                }
+                        }}>
+                    </InputControl>
+                </div>
+            </div>
         } else {
             return null
         }       
