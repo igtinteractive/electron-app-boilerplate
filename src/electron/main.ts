@@ -93,8 +93,8 @@ export default class Main {
 
 	/** called when the Application in initialize and ready */
 	private static onReady = () => {
-		//--- Open the pagePrizeInfo when app start
-		AppComMain.getInstance().openWindow({windowName:"pageWorkBook", title:"Workbook", maximize:true});
+		//--- Open the pageStripInfo when app start
+		AppComMain.getInstance().openWindow({windowName:"pageStripInfo", title:"Strip Info", maximize:true});
 	}
 
 	/**
