@@ -20,10 +20,13 @@ export default class Main {
 		let aut1 = v4(), aut2 = v4();
 		let pub1 = v4(), pub2 =v4(), pub3 = v4(); 
 
-		let projectData = {
+		let appData = {
 			appData : {
-				selectedBookId: null
-			},
+                workbook: null, 
+                filepath : null, 
+                selectedSheet : "",
+                selectedRange : ""
+            },
 	
 			projectData : {
 				books : {
@@ -83,15 +86,15 @@ export default class Main {
 		}		
 
 		//** set the project data */
-		AppComMain.getInstance().syncData("projectData", JSON.stringify(projectData));
+		AppComMain.getInstance().syncData("appData", JSON.stringify(appData));
 
 		
 	}
 
 	/** called when the Application in initialize and ready */
 	private static onReady = () => {
-		//--- Open the pageStripInfo when app start
-		AppComMain.getInstance().openWindow({windowName:"pageStripInfo", title:"Page StripInfo", maximize:true});
+		//--- Open the pagePrizeInfo when app start
+		AppComMain.getInstance().openWindow({windowName:"pageWorkBook", title:"Workbook", maximize:true});
 	}
 
 	/**

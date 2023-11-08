@@ -2,6 +2,11 @@ import { computed, makeAutoObservable, observable } from "mobx";
 import * as fs from "fs-extra";
 import * as XLSX from 'xlsx';
 
+import AppComRenderer, { AppComEventTypes } from "../electron/appCom/appComRenderer";
+import { ipcRenderer } from "electron";
+
+
+
 export interface IWorkbookProps {
     appData : {
         workbook? : any,
@@ -27,6 +32,19 @@ export default class WorkbookStore {
             
             //*** make it oservable for mobx decorator to work.*/
             makeAutoObservable(WorkbookStore._instance);
+            
+            //*** fetch data from electron main process and initialize */
+            let appData = AppComRenderer.getInstance().getData("appData");
+            this._instance?.initStore(JSON.parse(appData));
+            
+            //*** Data Sync Events **************************************************/
+            ipcRenderer.on(AppComEventTypes.syncData, (evt, dataKey, stringJson) => {
+                switch (dataKey) {
+                    case "appData" :
+                        this._instance?.initStore(JSON.parse(stringJson));
+                        break;
+                }
+            });
 
 		}
 		return WorkbookStore._instance;
@@ -120,7 +138,40 @@ export default class WorkbookStore {
      */
     public initStore = (projectProps: IWorkbookProps) => {
         this._workbook = projectProps.appData.workbook ? projectProps.appData.workbook : null;
+        this._filepath = projectProps.appData.filepath ? projectProps.appData.filepath : null;
+        this._selectedSheet = projectProps.appData.selectedSheet ? projectProps.appData.selectedSheet : "";
+        this._selectedRange = projectProps.appData.selectedRange ? projectProps.appData.selectedRange : "";
+
     }
+
+    /**
+     * Syncronize the data between all windows.
+     * dispatch AppComEventTypes.syncData to the AppComMain
+     * wich then re-dispatch the AppComEventTypes.syncData to all windows.
+     */
+    public syncData = () => {
+        AppComRenderer.getInstance().syncData("appData", JSON.stringify(this.getJson()));
+    }
+
+    public getJson = () => {
+        let workbook = this._workbook;
+        let filepath = this._filepath
+        let selectedSheet = this._selectedSheet
+        let selectedRange = this._selectedRange
+       
+        let appdata = {
+           
+            appData : {
+                workbook: workbook, 
+                filepath : filepath, 
+                selectedSheet : selectedSheet,
+                selectedRange : selectedRange
+            }
+        }       
+
+        return appdata;
+    }
+
 
     @computed
     public get workbook(): any | null {
