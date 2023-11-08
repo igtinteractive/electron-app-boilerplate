@@ -15,6 +15,8 @@ module.exports = {
 		pageC : "./src/pageC/pageC.tsx",
 		pageExcel : "./src/pageExcel/pageExcel.tsx",
 		pageStripInfo : "./src/pageStripInfo/pageStripInfo.tsx",
+		pagePrizeInfo : "./src/pagePrizeInfo/pagePrizeInfo.tsx",
+		pageWorkBook : "./src/pagePrizeInfo/pageWorkBook.tsx"
 	},
 
 	// each page must have a plugin to get compile as a html page correctly.
@@ -46,6 +48,16 @@ module.exports = {
 		new HtmlWebpackPlugin({
 			filename:"pageStripInfo.html",
 			chunks: ['pageStripInfo'],		
+			template: path.resolve(__dirname, "./../src/electron/index.html")
+		}),
+		new HtmlWebpackPlugin({
+			filename:"pagePrizeInfo.html",
+			chunks: ['pagePrizeInfo'],		
+			template: path.resolve(__dirname, "./../src/electron/index.html")
+		}),
+		new HtmlWebpackPlugin({
+			filename:"pageWorkBook.html",
+			chunks: ['pageWorkBook'],		
 			template: path.resolve(__dirname, "./../src/electron/index.html")
 		})
 	],
